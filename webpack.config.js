@@ -1,0 +1,10 @@
+const path = require('path');
+
+module.exports = {
+  entry: './contentScript.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'extension'),
+  },
+  watch: true
+};
