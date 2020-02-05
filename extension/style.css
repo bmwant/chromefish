@@ -1,18 +1,6 @@
-.cfarrow {
-  position: fixed;
-  z-index: 999;
-  top: 100px;
-  left: 400px;
-
-}
-
 .cf-draw-area {
   position: fixed;
   z-index: 999;
-  top: 100px;
-  left: 400px;
-}
-
-svg {
-  width: 400px !important;
+  /*top: 0;*/
+  /*left: 0;*/
 }

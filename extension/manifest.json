@@ -31,7 +31,7 @@
   ],
   "content_scripts": [
    {
-     "matches": ["*://*.chrome.com/*"],
+     "matches": ["*://lichess.org/*"],
      "js": ["bundle.js"],
      "css": ["style.css"],
      "all_frames": true

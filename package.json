@@ -15,6 +15,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "@svgdotjs/svg.js": "^3.0.16"
+    "@svgdotjs/svg.js": "^3.0.16",
+    "stockfish": "^10.0.2"
   }
 }
