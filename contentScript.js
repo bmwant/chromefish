@@ -1,5 +1,5 @@
 import { SVG } from '@svgdotjs/svg.js'
-import { Chess } from 'chess.js'
+// import { chess } from 'chess.js'
 
 
 var board = document.getElementsByTagName('cg-board')[0];
@@ -35,7 +35,6 @@ function getFen() {
     var initRegex = /LichessRound\.boot\((.+)\)/gm;
     var match = initRegex.exec(stringData);
     if (match !== null) {
-      console.log(match[1]);
       var initData = JSON.parse(match[1]);
       // console.log('fen', initData.data.game.fen);
       return initData.data.game.fen;
@@ -64,10 +63,9 @@ function drawLine(from, to) {
 
 
 function showBestMove() {
-  // var Chess = require('chess').Chess;
   let fen = getFen();
-  var chess = new Chess();
-  console.log(chess.validate_fen(fen));
+  var engine = new Worker('stockfish.js');
+  var stockfish = new Worker('stockfish.js');
 
 }
 
