@@ -1,4 +1,6 @@
 import { SVG } from '@svgdotjs/svg.js'
+import { Chess } from 'chess.js'
+
 
 var board = document.getElementsByTagName('cg-board')[0];
 var boardSize = board.getBoundingClientRect();
@@ -25,17 +27,18 @@ function n2p(number) {
   return (number-1) * cellSize;
 }
 
+
 function getFen() {
   var scriptElems = document.getElementsByTagName('script');
   scriptElems.forEach(function(s) {
     var stringData = s.text;
-    // console.log(stringData);
-    var initRegex = /LichessRound\.boot\(.+\)/gm;
+    var initRegex = /LichessRound\.boot\((.+)\)/gm;
     var match = initRegex.exec(stringData);
     if (match !== null) {
       console.log(match[1]);
-      var initData = JSON.parse(match[0]);
+      var initData = JSON.parse(match[1]);
       // console.log('fen', initData.data.game.fen);
+      return initData.data.game.fen;
     }
   });
 }
@@ -59,5 +62,15 @@ function drawLine(from, to) {
   });
 }
 
+
+function showBestMove() {
+  // var Chess = require('chess').Chess;
+  let fen = getFen();
+  var chess = new Chess();
+  console.log(chess.validate_fen(fen));
+
+}
+
 getFen();
 drawLine('f6', 'd4');
+showBestMove();

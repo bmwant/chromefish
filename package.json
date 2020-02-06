@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.0.16",
+    "chess.js": "^0.10.2",
     "stockfish": "^10.0.2"
   }
 }
