@@ -1,10 +1,12 @@
-import Worker from 'stockfish.js';
+// import Worker from 'stockfish.js';
+// import Worker from './worker.js';
 
 function engineGame(options) {
   //options = options || {}
   //var game = new Chess();
   var board;
-  var engine = new Worker();
+  var imgURL = chrome.runtime.getURL("worker.js");
+  var engine = new Worker(imgURL);
   var engineStatus = {};
   var displayScore = false;
   var time = { wtime: 300000, btime: 300000, winc: 2000, binc: 2000 };
