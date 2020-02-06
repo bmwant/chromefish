@@ -5,14 +5,16 @@
   "main": "extension/background.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "watch": "webpack --config webpack.config.dev.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "worker-loader": "^2.0.0"
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.0.16",

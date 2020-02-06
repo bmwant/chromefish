@@ -1,8 +1,10 @@
+import Worker from 'stockfish.js';
+
 function engineGame(options) {
-  options = options || {}
-  var game = new Chess();
+  //options = options || {}
+  //var game = new Chess();
   var board;
-  var engine = new Worker('stockfish.js');
+  var engine = new Worker();
   var engineStatus = {};
   var displayScore = false;
   var time = { wtime: 300000, btime: 300000, winc: 2000, binc: 2000 };
@@ -84,11 +86,16 @@ function engineGame(options) {
     clockTick();
   }
 
+  function suggestMove(fen) {
+    uciCmd('position fen ' + fen);
+    uciCmd('go depth' + time.depth);
+  }
+
   function prepareMove() {
-    stopClock();
+    // stopClock();
     $('#pgn').text(game.pgn());
     board.position(game.fen());
-    updateClock();
+    // updateClock();
     var turn = game.turn() == 'w' ? 'white' : 'black';
     if(!game.game_over()) {
       if(turn != playerColor) {
@@ -108,9 +115,9 @@ function engineGame(options) {
         }
         isEngineRunning = true;
       }
-      if(game.history().length >= 2 && !time.depth && !time.nodes) {
-        startClock();
-      }
+      // if(game.history().length >= 2 && !time.depth && !time.nodes) {
+      //   startClock();
+      // }
     }
   }
 
@@ -124,8 +131,9 @@ function engineGame(options) {
       var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbk])?/);
       if(match) {
         isEngineRunning = false;
-        game.move({from: match[1], to: match[2], promotion: match[3]});
-        prepareMove();
+        console.log(match[1], match[2]);
+        // game.move({from: match[1], to: match[2], promotion: match[3]});
+        // prepareMove();
       } else if(match = line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)) {
         engineStatus.search = 'Depth: ' + match[1] + ' Nps: ' + match[2];
       }
@@ -171,7 +179,7 @@ function engineGame(options) {
     onSnapEnd: onSnapEnd
   };
 
-  board = new ChessBoard('board', cfg);
+  //board = new ChessBoard('board', cfg);
 
   return {
     reset: function() {
@@ -179,6 +187,9 @@ function engineGame(options) {
       uciCmd('setoption name Contempt Factor value 0');
       uciCmd('setoption name Skill Level value 20');
       uciCmd('setoption name Aggressiveness value 100');
+    },
+    suggestMove: function(fen) {
+      suggestMove(fen);
     },
     loadPgn: function(pgn) { game.load_pgn(pgn); },
     setPlayerColor: function(color) {
@@ -224,3 +235,6 @@ function engineGame(options) {
     }
   };
 }
+
+// export engineGame;
+export default engineGame;

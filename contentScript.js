@@ -1,5 +1,6 @@
 import { SVG } from '@svgdotjs/svg.js'
 // import { chess } from 'chess.js'
+import engineGame from './enginegame'
 
 
 var board = document.getElementsByTagName('cg-board')[0];
@@ -64,8 +65,10 @@ function drawLine(from, to) {
 
 function showBestMove() {
   let fen = getFen();
-  var engine = new Worker('stockfish.js');
-  var stockfish = new Worker('stockfish.js');
+
+
+  let engine = new engineGame();
+  engine.suggestMove(fen);
 
 }
 
