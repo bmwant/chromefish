@@ -37,8 +37,10 @@
      "all_frames": true
    }
  ],
+  "content_security_policy": "script-src 'self' 'wasm-eval'; object-src 'self'",
   "web_accessible_resources": [
-    "style.css"
+    "style.css",
+    "stockfish.wasm"
   ],
   "manifest_version": 2
 }

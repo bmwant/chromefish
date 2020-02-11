@@ -15,8 +15,8 @@ area.style.left = parseInt(boardSize.x) + 'px';
 area.style.top = parseInt(boardSize.y) + 'px';
 
 var cellSize = boardSize.height / 8;
-console.log(draw.style.left, draw.style.top);
-console.log(boardSize.left, boardSize.top);
+// console.log(draw.style.left, draw.style.top);
+// console.log(boardSize.left, boardSize.top);
 
 // letter to pixels
 function l2p(letter) {
@@ -65,10 +65,14 @@ function drawLine(from, to) {
 
 function showBestMove() {
   let fen = getFen();
-
-
-  let engine = new engineGame();
-  engine.suggestMove(fen);
+  let game = new engineGame();
+  game.reset();
+  // game.setTime(baseTime, inc);
+  game.setSkillLevel(1);
+  // game.setPlayerColor('white');
+  // game.setDisplayScore($('#showScore').is(':checked'));
+  game.start();
+  // engine.suggestMove(fen);
 
 }
 

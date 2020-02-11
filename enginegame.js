@@ -1,12 +1,14 @@
 // import Worker from 'stockfish.js';
-// import Worker from './worker.js';
+// import stockfish from 'stockfish.js';
+import stockfish from './stockfish.asm.js'
+
 
 function engineGame(options) {
   //options = options || {}
   //var game = new Chess();
+  console.log('this is engine', typeof STOCKFISH);
   var board;
-  var imgURL = chrome.runtime.getURL("worker.js");
-  var engine = new Worker(imgURL);
+  var engine = STOCKFISH();
   var engineStatus = {};
   var displayScore = false;
   var time = { wtime: 300000, btime: 300000, winc: 2000, binc: 2000 };
@@ -124,7 +126,13 @@ function engineGame(options) {
   }
 
   engine.onmessage = function(event) {
-    var line = event.data;
+    var line;
+    if (event && typeof event === "object") {
+        line = event.data;
+    } else {
+        line = event;
+    }
+    console.log("Reply: " + line);
     if(line == 'uciok') {
       engineStatus.engineLoaded = true;
     } else if(line == 'readyok') {
@@ -185,7 +193,7 @@ function engineGame(options) {
 
   return {
     reset: function() {
-      game.reset();
+      //game.reset();
       uciCmd('setoption name Contempt Factor value 0');
       uciCmd('setoption name Skill Level value 20');
       uciCmd('setoption name Aggressiveness value 100');
@@ -224,7 +232,7 @@ function engineGame(options) {
       uciCmd('isready');
       engineStatus.engineReady = false;
       engineStatus.search = null;
-      prepareMove();
+      //prepareMove();
     },
     undo: function() {
       if(isEngineRunning)
