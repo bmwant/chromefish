@@ -1,5 +1,4 @@
 import { SVG } from '@svgdotjs/svg.js'
-// import { chess } from 'chess.js'
 import engineGame from './enginegame'
 
 
@@ -30,17 +29,30 @@ function n2p(number) {
 
 
 function getFen() {
-  var scriptElems = document.getElementsByTagName('script');
-  scriptElems.forEach(function(s) {
-    var stringData = s.text;
+  let scriptElems = document.getElementsByTagName('script');
+
+  for (let i = 0; i < scriptElems.length; i++) {
+    var stringData = scriptElems[i].text;
     var initRegex = /LichessRound\.boot\((.+)\)/gm;
     var match = initRegex.exec(stringData);
     if (match !== null) {
       var initData = JSON.parse(match[1]);
-      // console.log('fen', initData.data.game.fen);
+      console.log('fen', initData.data.game.fen);
       return initData.data.game.fen;
     }
-  });
+  }
+  // scriptElems.forEach(function(s) {
+  //   var stringData = s.text;
+  //   var initRegex = /LichessRound\.boot\((.+)\)/gm;
+  //   var match = initRegex.exec(stringData);
+  //   if (match !== null) {
+  //     var initData = JSON.parse(match[1]);
+  //     console.log('fen', initData.data.game.fen);
+  //     fen = initData.data.game.fen;
+  //   }
+  // });
+  console.error('FEN was not found');
+  return null;
 }
 
 function drawLine(from, to) {
@@ -65,17 +77,17 @@ function drawLine(from, to) {
 
 function showBestMove() {
   let fen = getFen();
+  console.log('this is result', fen);
   let game = new engineGame();
-  game.reset();
+  // game.reset();
   // game.setTime(baseTime, inc);
-  game.setSkillLevel(1);
+  // game.setSkillLevel(1);
   // game.setPlayerColor('white');
   // game.setDisplayScore($('#showScore').is(':checked'));
-  game.start();
-  // engine.suggestMove(fen);
-
+  // game.start();
+  game.moveHint(fen);
 }
 
-getFen();
-drawLine('f6', 'd4');
+// getFen();
+// drawLine('f6', 'd4');
 showBestMove();
