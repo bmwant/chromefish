@@ -1,4 +1,4 @@
-import { SVG } from '@svgdotjs/svg.js'
+import { SVG, adopt } from '@svgdotjs/svg.js'
 import engineGame from './enginegame'
 
 
@@ -6,25 +6,35 @@ var board = document.getElementsByTagName('cg-board')[0];
 var boardSize = board.getBoundingClientRect();
 var draw = SVG().addTo('body')
   .size(boardSize.width, boardSize.height)
-  .addClass('cf-draw-area');
+  .addClass('cf-draw-area')
+  .attr({
+    'pointer-events': 'none'
+  });
 
+
+let container = document.getElementsByTagName('cg-container')[0];
+let svg = container.getElementsByTagName('svg')[0];
+// console.log('This is our svg', container, svg);
+// var draw = adopt(svg);
+//
+// console.log('This is our svg', draw);
 
 var area = document.getElementsByClassName('cf-draw-area')[0];
 area.style.left = parseInt(boardSize.x) + 'px';
 area.style.top = parseInt(boardSize.y) + 'px';
 
 var cellSize = boardSize.height / 8;
-// console.log(draw.style.left, draw.style.top);
-// console.log(boardSize.left, boardSize.top);
+console.log(draw.style.left, draw.style.top);
+console.log(boardSize.left, boardSize.top);
 
 // letter to pixels
 function l2p(letter) {
-  return ('a'.charCodeAt(0) - letter.charCodeAt(0)) * cellSize;
+  return ((letter.charCodeAt(0) - 'a'.charCodeAt(0)) + 0.5) * cellSize;
 }
 
 // number to pixels
 function n2p(number) {
-  return (number-1) * cellSize;
+  return (number - 0.5) * cellSize;
 }
 
 
@@ -62,11 +72,7 @@ function drawLine(from, to) {
   let x2 = l2p(to[0]);
   let y2 = n2p(to[1]);
 
-  console.log('cell size', cellSize);
-  console.log('from', x1, y1);
-  console.log('to', x2, y2);
-
-  var line = draw.line(x1, y1, x2, y2)
+  let line = draw.line(x1, y1, x2, y2)
     .stroke({ color: '#f06', width: 9, linecap: 'round', opacity: 0.6});
   line.marker('end', 4, 4, function(add) {
     add.path('M0,0 V4 L3,2 Z').size(4, 4);
@@ -79,15 +85,9 @@ function showBestMove() {
   let fen = getFen();
   console.log('this is result', fen);
   let game = new engineGame();
-  // game.reset();
-  // game.setTime(baseTime, inc);
-  // game.setSkillLevel(1);
-  // game.setPlayerColor('white');
-  // game.setDisplayScore($('#showScore').is(':checked'));
-  // game.start();
   game.moveHint(fen);
 }
 
 // getFen();
-// drawLine('f6', 'd4');
-showBestMove();
+drawLine('f6', 'd4');
+// showBestMove();
