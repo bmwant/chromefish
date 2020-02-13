@@ -1,15 +1,15 @@
 import stockfish from './stockfish.asm.js'
-// import Chess from 'chess.js'
 
 
-function engineGame(options) {
-  var board;
-  // var game = new Chess();
+function Engine(moveCallback) {
   var engine = STOCKFISH();
   var engineStatus = {};
   var time = { wtime: 300000, btime: 300000, winc: 2000, binc: 2000, depth: 2 };
   var playerColor = 'white';
   var isEngineRunning = false;
+
+  var _engine = this;
+  this.moveCallback = moveCallback;
 
   function uciCmd(cmd) {
     console.warn('sending', cmd);
@@ -62,11 +62,8 @@ function engineGame(options) {
     } else {
       line = event;
     }
-    if (line === undefined) {
-      console.info('something wrong');
-      return
-    }
-    console.log("Reply: " + line);
+
+    // console.log("Reply: " + line);
     if(line == 'uciok') {
       engineStatus.engineLoaded = true;
     } else if(line == 'readyok') {
@@ -75,9 +72,8 @@ function engineGame(options) {
       var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbk])?/);
       if(match) {
         isEngineRunning = false;
-        console.log('move', match[1], match[2], match[3]);
-        // game.move({from: match[1], to: match[2], promotion: match[3]});
-        // suggestMove()
+        console.log('engine move', match[1], match[2], match[3]);
+        _engine.moveCallback(match[1], match[2]);
       } else if(match = line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)) {
         engineStatus.search = 'Depth: ' + match[1] + ' Nps: ' + match[2];
       }
@@ -96,11 +92,9 @@ function engineGame(options) {
     }
   };
 
-  return {
-    moveHint: function(fen) {
-      suggestMove(fen);
-    }
-  };
+  this.moveHint = function(fen) {
+    suggestMove(fen);
+  }
 }
 
-export default engineGame;
+export default Engine;
