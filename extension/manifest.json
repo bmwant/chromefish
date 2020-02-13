@@ -19,11 +19,11 @@
   },
   "options_page": "options.html",
   "icons": {
-        "16": "images/icon16.png",
-        "32": "images/icon32.png",
-        "48": "images/icon48.png",
-        "128": "images/icon128.png"
-      },
+    "16": "images/icon16.png",
+    "32": "images/icon32.png",
+    "48": "images/icon48.png",
+    "128": "128.png"
+  },
   "permissions": [
     "storage",
     "declarativeContent",
@@ -39,8 +39,7 @@
  ],
   "content_security_policy": "script-src 'self' 'wasm-eval'; object-src 'self'",
   "web_accessible_resources": [
-    "style.css",
-    "stockfish.wasm"
+    "style.css"
   ],
   "manifest_version": 2
 }
