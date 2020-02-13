@@ -4,15 +4,14 @@ import stockfish from './stockfish.asm.js'
 function Engine(moveCallback) {
   var engine = STOCKFISH();
   var engineStatus = {};
-  var time = { wtime: 300000, btime: 300000, winc: 2000, binc: 2000, depth: 2 };
-  var playerColor = 'white';
+  var moveTime = 500; // miliseconds
   var isEngineRunning = false;
 
   var _engine = this;
   this.moveCallback = moveCallback;
 
   function uciCmd(cmd) {
-    console.warn('sending', cmd);
+    // console.warn('sending', cmd);
     engine.postMessage(cmd);
   }
 
@@ -22,37 +21,7 @@ function Engine(moveCallback) {
     uciCmd('ucinewgame');
     uciCmd('isready');
     uciCmd('position fen ' + fen);
-    uciCmd('go movetime 500');
-  }
-
-  function prepareMove() {
-    // stopClock();
-    $('#pgn').text(game.pgn());
-    board.position(game.fen());
-    // updateClock();
-    var turn = game.turn() == 'w' ? 'white' : 'black';
-    if(!game.game_over()) {
-      if(turn != playerColor) {
-        var moves = '';
-        var history = game.history({verbose: true});
-        for(var i = 0; i < history.length; ++i) {
-          var move = history[i];
-          moves += ' ' + move.from + move.to + (move.promotion ? move.promotion : '');
-        }
-        uciCmd('position startpos moves' + moves);
-        if(time.depth) {
-          uciCmd('go depth ' + time.depth);
-        } else if(time.nodes) {
-          uciCmd('go nodes ' + time.nodes);
-        } else {
-          uciCmd('go wtime ' + time.wtime + ' winc ' + time.winc + ' btime ' + time.btime + ' binc ' + time.binc);
-        }
-        isEngineRunning = true;
-      }
-      // if(game.history().length >= 2 && !time.depth && !time.nodes) {
-      //   startClock();
-      // }
-    }
+    uciCmd('go movetime ' + moveTime);
   }
 
   engine.onmessage = function(event) {
@@ -72,7 +41,7 @@ function Engine(moveCallback) {
       var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbk])?/);
       if(match) {
         isEngineRunning = false;
-        console.log('engine move', match[1], match[2], match[3]);
+        // console.log('engine move', match[1], match[2], match[3]);
         _engine.moveCallback(match[1], match[2]);
       } else if(match = line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)) {
         engineStatus.search = 'Depth: ' + match[1] + ' Nps: ' + match[2];

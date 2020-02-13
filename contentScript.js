@@ -12,15 +12,11 @@ var draw = SVG().addTo('body')
     'pointer-events': 'none'
   });
 
-let container = document.getElementsByTagName('cg-container')[0];
-
 var area = document.getElementsByClassName('cf-draw-area')[0];
 area.style.left = parseInt(boardSize.x) + 'px';
 area.style.top = parseInt(boardSize.y) + 'px';
 
 var cellSize = boardSize.height / 8;
-console.log(draw.style.left, draw.style.top);
-console.log(boardSize.left, boardSize.top);
 
 // letter to pixels
 function l2p(letter) {
@@ -65,19 +61,40 @@ function getInitialFen() {
   return null;
 }
 
+function getBoardOrientation() {
+  let boardClasses = Array.from(document.querySelector('div.cg-wrap').classList);
+  for(let className of boardClasses) {
+    if(className.startsWith('orientation')) {
+      return className.split('-')[1];
+    }
+  }
+  console.error('Cannot find board orientation');
+  return null;
+}
+
 function drawLine(from, to) {
+  let orientation = getBoardOrientation();
   draw.clear();
   let x1 = l2p(from[0]);
-  let y1 = boardSize.height - n2p(from[1]);
+  let y1 = n2p(from[1]);
 
   let x2 = l2p(to[0]);
-  let y2 = boardSize.height - n2p(to[1]);
+  let y2 = n2p(to[1]);
 
+  if(orientation === 'black') {
+    x1 = boardSize.width - x1;
+    x2 = boardSize.width - x2;
+  } else if(orientation === 'white') {
+    y1 = boardSize.height - y1;
+    y2 = boardSize.height - y2;
+  }
+
+  const opacity = 0.4;
   let line = draw.line(x1, y1, x2, y2)
-    .stroke({ color: '#f06', width: 9, linecap: 'round', opacity: 0.6});
+    .stroke({ color: '#f06', width: 9, linecap: 'round', opacity: opacity});
   line.marker('end', 4, 4, function(add) {
     add.path('M0,0 V4 L3,2 Z').size(4, 4);
-    this.fill({ color: '#f06', opacity: 0.6});
+    this.fill({ color: '#f06', opacity: opacity});
   });
 }
 
@@ -86,7 +103,6 @@ const eng = new Engine(drawLine);
 const showBestMove = function(engine) {
   let fen = getGameFen();
   if (fen !== null) {
-    console.info('fen', fen);
     engine.moveHint(fen);
   }
 };
@@ -99,7 +115,6 @@ const callback = function(mutationsList, observer) {
     if (mutation.type === 'childList' && mutation.target.className === 'moves') {
       showBestMove(eng);
     }
-    // console.log(mutation, mutation.target);
   }
 };
 
